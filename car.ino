@@ -67,13 +67,7 @@ void loop() {
 
   // Your code is in the area below
   //--------------------------------------------------//
-  if (car.getDistanceHead() < 20) {
-    car.setMotorLeft(255, 0);
-    car.setMotorRight(255, 1);
-  } else {
-    car.setMotorLeft(255, 1);
-    car.setMotorRight(255, 1);
-  }
+  
 
 
 
