@@ -80,6 +80,13 @@ void loop() {
     car.setMotorLeft(200, 1);
     car.setMotorRight(200, 1);
   }
+  
+  // Use Serial Monitor or Plotter in Arduino IDE to display the values on the screen
+  Serial.print(car.getDistanceHead());
+  Serial.print(" ");
+  Serial.print(car.getSpeedLeft());
+  Serial.print(" ");
+  Serial.println(car.getSpeedRight());
   //-----Example code-----//
   
   
