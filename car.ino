@@ -33,7 +33,7 @@ void ENC_LEFT_ISR() {
   speedValueLeft_SAMPLE[10] -= speedValueLeft_SAMPLE[i];
   speedValueLeft_SAMPLE[i] = (TCNT1 - currentEncoderLeft + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
   speedValueLeft_SAMPLE[10] += speedValueLeft_SAMPLE[i];
-  speedValueLeft = 250000 / (speedValueLeft_SAMPLE[10] / 10);
+  speedValueLeft = 255254.4 / (speedValueLeft_SAMPLE[10] / 10);
   car.setSpeedLeft(speedValueLeft);
   i = (i + 1) % 10;
   currentEncoderLeft = TCNT1;
@@ -44,7 +44,7 @@ void ENC_RIGHT_ISR() {
   speedValueRight_SAMPLE[10] -= speedValueRight_SAMPLE[i];
   speedValueRight_SAMPLE[i] = (TCNT1 - currentEncoderRight + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
   speedValueRight_SAMPLE[10] += speedValueRight_SAMPLE[i];
-  speedValueRight = 250000 / (speedValueRight_SAMPLE[10] / 10);
+  speedValueRight = 255254.4 / (speedValueRight_SAMPLE[10] / 10);
   car.setSpeedRight(speedValueRight);
   i = (i + 1) % 10;
   currentEncoderRight = TCNT1;
