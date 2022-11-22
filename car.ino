@@ -64,13 +64,27 @@ void loop() {
   car.setSpeedLeft(speedValueLeft);
   car.setSpeedRight(speedValueRight);
   car.configureSpeed(speedValueLeft, speedValueRight);
-
+  
   // Your code is in the area below
   //--------------------------------------------------//
+  //-----Example code-----//
+  if (car.getDistanceHead() < 50) {
+    if (car.getDistanceHead() < 20) {
+      car.setMotorLeft(255, 0);
+      car.setMotorRight(255, 1);
+    } else {
+      car.setMotorLeft(150, 1);
+      car.setMotorRight(150, 1);
+    }
+  } else {
+    car.setMotorLeft(200, 1);
+    car.setMotorRight(200, 1);
+  }
+  //-----Example code-----//
   
-
-
-
+  
+  
+  
   
   //--------------------------------------------------//
 }
