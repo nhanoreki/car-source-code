@@ -1,5 +1,6 @@
 # car-source-code
 # About the functions provided in the library carMazeOfOz.h
+# Notes: Please press the reset button on Arduino before use
 
 1. setMotorLeft()
   - Description: The function is used to controls the left motor speed and direction of rotation.
