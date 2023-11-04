@@ -1,10 +1,7 @@
 #include "carMazeOfOz.h"
 
-#define STEP_TIME_64 4e-6
-#define TIMER1_STEP_CYCLE 65536
 
 const byte trig = 8;
-
 carMazeOfOz car;
 
 volatile float speedValueLeft, speedValueRight;
@@ -24,30 +21,30 @@ void setup() {
   Serial.begin(9600);
   car.setPin();
   car.setInterrupt();
-  attachInterrupt(0, ENC_LEFT_ISR, RISING);
-  attachInterrupt(1, ENC_RIGHT_ISR, RISING);
+  attachInterrupt(LOW, ENC_LEFT_ISR, RISING);
+  attachInterrupt(HIGH, ENC_RIGHT_ISR, RISING);
 }
 
 void ENC_LEFT_ISR() {
   static byte i = 0;
   speedValueLeft_SAMPLE[10] -= speedValueLeft_SAMPLE[i];
-  speedValueLeft_SAMPLE[i] = (TCNT1 - currentEncoderLeft + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
+  speedValueLeft_SAMPLE[i] = (COUNTER_TIMER - currentEncoderLeft + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
   speedValueLeft_SAMPLE[10] += speedValueLeft_SAMPLE[i];
-  speedValueLeft = 255254.4 / (speedValueLeft_SAMPLE[10] / 10);
+  speedValueLeft = PERIMETER_ / (speedValueLeft_SAMPLE[10] / 10);
   car.setSpeedLeft(speedValueLeft);
   i = (i + 1) % 10;
-  currentEncoderLeft = TCNT1;
+  currentEncoderLeft = COUNTER_TIMER;
 }
 
 void ENC_RIGHT_ISR() {
   static byte i = 0;
   speedValueRight_SAMPLE[10] -= speedValueRight_SAMPLE[i];
-  speedValueRight_SAMPLE[i] = (TCNT1 - currentEncoderRight + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
+  speedValueRight_SAMPLE[i] = (COUNTER_TIMER - currentEncoderRight + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
   speedValueRight_SAMPLE[10] += speedValueRight_SAMPLE[i];
-  speedValueRight = 255254.4 / (speedValueRight_SAMPLE[10] / 10);
+  speedValueRight = PERIMETER_ / (speedValueRight_SAMPLE[10] / 10);
   car.setSpeedRight(speedValueRight);
   i = (i + 1) % 10;
-  currentEncoderRight = TCNT1;
+  currentEncoderRight = COUNTER_TIMER;
 }
 
 // Your functions is in the area below
@@ -70,15 +67,15 @@ void loop() {
   //-----Example code-----//
   if (car.getDistanceHead() < 50) {
     if (car.getDistanceHead() < 20) {
-      car.setMotorLeft(255, 0);
-      car.setMotorRight(255, 1);
+      car.setMotorLeft(MAX_PWM, BACKWARD);
+      car.setMotorRight(MAX_PWM, FORWARD);
     } else {
-      car.setMotorLeft(150, 1);
-      car.setMotorRight(150, 1);
+      car.setMotorLeft(150, FORWARD);
+      car.setMotorRight(150, FORWARD);
     }
   } else {
-    car.setMotorLeft(200, 1);
-    car.setMotorRight(200, 1);
+    car.setMotorLeft(200, FORWARD);
+    car.setMotorRight(200, FORWARD);
   }
   
   // Use Serial Monitor or Plotter in Arduino IDE to display the values on the screen

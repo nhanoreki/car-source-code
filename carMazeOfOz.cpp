@@ -2,11 +2,6 @@
 #include <avr/interrupt.h>
 #include "carMazeOfOz.h"
 
-#define SOUND_SPEED 34320
-#define MAX_PWM 255
-#define MIN_PWM 0
-#define STEP_TIME_64 4e-6
-#define TIMER1_STEP_CYCLE 65536
 
 const byte IN1 = 4;
 const byte IN2 = 5;
@@ -50,7 +45,7 @@ void carMazeOfOz::setInterrupt() {
   TIMSK1 = 0;
 
   TCCR1B |= (1 << CS11) | (1 << CS10);
-  TCNT1 = 0;
+  COUNTER_TIMER = 0;
   TIMSK1 = (1 << TOIE1);
 
   PCICR = 0;
@@ -64,7 +59,7 @@ void carMazeOfOz::setInterrupt() {
 }
 
 ISR (TIMER1_OVF_vect) {
-  TCNT1 = 0;
+  COUNTER_TIMER = 0;
 }
 
 ISR (PCINT0_vect) {
@@ -72,13 +67,13 @@ ISR (PCINT0_vect) {
     if (headHigh){
       static byte i = 0;
       distanceHead_SAMPLE[10] -= distanceHead_SAMPLE[i];
-      distanceHead_SAMPLE[i] = (TCNT1 - currentSensorHead + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
+      distanceHead_SAMPLE[i] = (COUNTER_TIMER - currentSensorHead + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
       distanceHead_SAMPLE[10] += distanceHead_SAMPLE[i];
       distanceHead = ((SOUND_SPEED * STEP_TIME_64) * (distanceHead_SAMPLE[10] / 10)) / 2;
       i = (i + 1) % 10;
       ++allSensor;
     } else {
-      currentSensorHead = TCNT1;
+      currentSensorHead = COUNTER_TIMER;
     }
     headHigh = !headHigh;
   }
@@ -86,13 +81,13 @@ ISR (PCINT0_vect) {
     if (leftHigh) {
       static byte i = 0;
       distanceLeft_SAMPLE[10] -= distanceLeft_SAMPLE[i];
-      distanceLeft_SAMPLE[i] = (TCNT1 - currentSensorLeft + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
+      distanceLeft_SAMPLE[i] = (COUNTER_TIMER - currentSensorLeft + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
       distanceLeft_SAMPLE[10] += distanceLeft_SAMPLE[i];
       distanceLeft = ((SOUND_SPEED * STEP_TIME_64) * (distanceLeft_SAMPLE[10] / 10)) / 2;
       i = (i + 1) % 10;
       ++allSensor;
     } else {
-      currentSensorLeft = TCNT1; 
+      currentSensorLeft = COUNTER_TIMER; 
     }
     leftHigh = !leftHigh;
   }
@@ -100,13 +95,13 @@ ISR (PCINT0_vect) {
     if (rightHigh) {
       static byte i = 0;
       distanceRight_SAMPLE[10] -= distanceRight_SAMPLE[i];
-      distanceRight_SAMPLE[i] = (TCNT1 - currentSensorRight + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
+      distanceRight_SAMPLE[i] = (COUNTER_TIMER - currentSensorRight + TIMER1_STEP_CYCLE) % TIMER1_STEP_CYCLE;
       distanceRight_SAMPLE[10] += distanceRight_SAMPLE[i];
       distanceRight = ((SOUND_SPEED * STEP_TIME_64) * (distanceRight_SAMPLE[10] / 10)) / 2;
       i = (i + 1) % 10;
       ++allSensor;
     } else {
-      currentSensorRight = TCNT1; 
+      currentSensorRight = COUNTER_TIMER; 
     }
     rightHigh = !rightHigh;
   }
